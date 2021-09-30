@@ -133,5 +133,5 @@ def plotPoints(a):
 
 ani = FuncAnimation(fig, plotPoints,interval=16)
 plt.show()
-
+ 
 #Note to reader: all above code is purely developmental. You should have simular expectations for it as you would for scribbled down notes.
