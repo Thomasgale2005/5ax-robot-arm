@@ -114,12 +114,11 @@ def plotPoints(a):
         ax.clear()
     print("a:")
     print(a)
-    x = math.sin(math.radians(a))
     print("x:")
-    print(x)
+    # print(x)
     print('val:')
-    print(180*(x)+45)
-    TR = [179,270*(x)+90]
+    print((a*6)+1)
+    TR = [120,(a*6)+1]
     TL = [4,3,4]
     AL = [5,5,1,1]
     point = getPlots(TL,TR,AL)
@@ -132,7 +131,7 @@ def plotPoints(a):
     plt.draw()
     # plt.show()
 
-ani = FuncAnimation(fig, plotPoints,interval=10)
+ani = FuncAnimation(fig, plotPoints,interval=16)
 plt.show()
 
 #Note to reader: all above code is purely developmental. You should have simular expectations for it as you would for scribbled down notes.
