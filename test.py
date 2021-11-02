@@ -114,11 +114,12 @@ def plotPoints(a):
         ax.clear()
     print("a:")
     print(a)
+    x = math.sin(math.radians(a))
     print("x:")
-    # print(x)
+    print(x)
     print('val:')
-    print((a*6)+1)
-    TR = [120,(a*6)+1]
+    print(180*(x)+45)
+    TR = [179,270*(x)+90]
     TL = [4,3,4]
     AL = [5,5,1,1]
     point = getPlots(TL,TR,AL)
@@ -127,22 +128,9 @@ def plotPoints(a):
     plt.plot(point[0][2:4],point[2][2:4],point[1][2:4],'blue')
     plt.plot(point[0][3:5],point[2][3:5],point[1][3:5],'orange')
     # plt.plot(point[0],point[2],point[1],'blue')
-    ax.plot3D([0,-20,-20,-20,40,40],[0,0,-20,40,40,40],[0,0,0,0,0,40],'gray')
+    ax.plot3D([0,-10,-10,-10,15,15],[0,0,-10,15,15,15],[0,0,0,0,0,15],'gray')
     plt.draw()
     # plt.show()
 
-# ani = FuncAnimation(fig, plotPoints,interval=16)
-# plt.show()
-TR = [180.001,180.001]
-TL = [22.5,22.5,0.1]
-AL = [22.5,22.5,6.41,5.05]
-point = getPlots(TL,TR,AL)
-plt.plot(point[0][0:2],point[2][0:2],point[1][0:2],'purple')
-plt.plot(point[0][1:3],point[2][1:3],point[1][1:3],'green')
-plt.plot(point[0][2:4],point[2][2:4],point[1][2:4],'blue')
-plt.plot(point[0][3:5],point[2][3:5],point[1][3:5],'orange')
-# plt.plot(point[0],point[2],point[1],'blue')
-ax.plot3D([0,-20,-20,-20,40,40],[0,0,-20,40,40,40],[0,0,0,0,0,40],'gray')
-plt.draw()
+ani = FuncAnimation(fig, plotPoints,interval=10)
 plt.show()
-#Note to reader: all above code is purely developmental. You should have simular expectations for it as you would for scribbled down notes.
