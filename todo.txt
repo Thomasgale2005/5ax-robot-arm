@@ -1,10 +1,6 @@
 create final moveArm function
-add angles bounds to moveArm function
-convert code into c++
-create function to update robot arm's position using 3 joystick (2 position(x,y,z)), 1 rotation((z,y/x)))) https://exploreembedded.com/wiki/Analog_JoyStick_with_Arduino
-design and print triple joystick holder (simple game controller) with labels and space for cables
+add angles bounds to moveArm functions
 
-do homework
-
-export table: sbData as csv
-send sbData.csv over google drive download link to peeked along with file format
+Robot mk2:
+Put design intoCAD
+Order stepper motors and aluminium extrusion from ali-express.
