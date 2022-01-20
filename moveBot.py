@@ -1,10 +1,10 @@
 from pyfirmata import Arduino, SERVO
 import time
 import math
-# port = '/dev/cu.usbmodem1301'
-# # pin = 10
-# board = Arduino(port)
-# board.digital[13].mode = SERVO
+port = '/dev/cu.usbmodem1101'
+# pin = 10
+board = Arduino(port)
+board.digital[13].mode = SERVO
 def rotateServo(pin, angle):
     print(angle)
     board.digital[pin].write(((256*(angle-45))/360))
