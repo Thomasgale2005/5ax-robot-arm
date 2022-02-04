@@ -69,6 +69,7 @@ def calcRotLocs(target,TRots,N3l,N4l):
     vecNP = [pointP[0]-pointN4[0],pointP[1]-pointN4[1],pointP[2]-pointN4[2]]
     print("dot product: (3dp)\n" + str(round(vecNT[0]*vecNP[0] + vecNT[1]*vecNP[1]+vecNT[2]*vecNP[2],3)))
     vectorN3 = [0,1,0]
+    print
     vectorN3[0] = ((-pointP[0]*vectorN3[1]*(pointP[1]-pointN4[1]))/(pointP[0]*(pointP[0]-pointN4[0])+pointP[2]*(pointP[2]-pointN4[2])))
     vectorN3[2] = ((-pointP[2]*vectorN3[1]*(pointP[1]-pointN4[1]))/(pointP[0]*(pointP[0]-pointN4[0])+pointP[2]*(pointP[2]-pointN4[2])))
     vecNP = [pointP[0]-pointN4[0],pointP[1]-pointN4[1],pointP[2]-pointN4[2]]
@@ -93,6 +94,7 @@ def getPoints(TL,TR,AL):
     rotDat = calcRotLocs(TL,TR,AL[2],AL[3])
     locDat = calcLocLocs(rotDat[0],AL[0],AL[1])
     if rotDat[1][1] > rotDat[0][1]:
+        print((rotDat[1][1]-rotDat[0][1])/TL[2])
         ang3b = math.degrees(math.asin((rotDat[1][1]-rotDat[0][1])/TL[2]))
     else:
         ang3b = -math.degrees(math.asin((rotDat[1][1]-rotDat[0][1])/TL[2]))
@@ -133,7 +135,7 @@ def plotPoints(a):
 
 # ani = FuncAnimation(fig, plotPoints,interval=16)
 # plt.show()
-TR = [180.001,180.001]
+TR = [181.00001,180.001]
 TL = [22.5,22.5,0.1]
 AL = [22.5,22.5,6.41,5.05]
 point = getPlots(TL,TR,AL)

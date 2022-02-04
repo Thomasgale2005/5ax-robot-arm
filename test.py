@@ -1,136 +1,80 @@
+from turtle import bgcolor
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
+from mpl_toolkits.mplot3d import Axes3D
 import math
-plt.style.use('seaborn-pastel')
+def sin(x):
+    return(round(math.sin(math.radians(x)),5))
+def cos(x):
+    return(round(math.cos(math.radians(x)),5))
+def acos(x):
+    return(round(math.degrees(math.acos(x),5)))
+def atan(x):
+    return(round(math.degrees(math.atan(x),5)))
+def mg(vec):
+    mag = 0
+    for i in range(3):
+        mag+=vec[i]**2
+    return(mag**0.5)
+def qd(a,b,c):
+    print([a,b,c])
+    E1 = (-b + (b**2-4*a*c)**0.5)/(2*a)
+    E2 = (-b - (b**2-4*a*c)**0.5)/(2*a)
+    return([E1,E2])
+def dt(a,b):
+    return(a[0]*b[0]+a[1]*b[1]+a[2]*b[2])
+def vecSum(a,b):
+    return(a[0]+b[0],a[1]+b[1],a[2]+b[2])
+def vecSub(a,b):
+    return(a[0]-b[0],a[1]-b[1],a[2]-b[2])
 fig = plt.figure()
-ax = plt.axes(projection='3d')
-# plt.axis('equal')
+ax = Axes3D(fig)
+ax.set_xlim3d(0, 150)
+ax.set_ylim3d(0, 150)
+ax.set_zlim3d(0, 150)
+ax.set_box_aspect([ub - lb for lb, ub in (getattr(ax, f'get_{a}lim')() for a in 'xyz')])
 
-# jointLocations = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]] 
-# jl = jointLocations
-# x = [jl[0][0],jl[1][0],jl[2][0],jl[3][0],jl[4][0]]
-# y = [jl[0][1],jl[1][1],jl[2][1],jl[3][1],jl[4][1]]
-# z = [jl[0][2],jl[1][2],jl[2][2],jl[3][2],jl[4][2]]
-# plt.plot(x,y,z)
-# L0 = 5
-# L1 = 5
-R0 = 0.5
-R1 = 0.5
-TR = [150,200]
-TL = [3,3,5]
-AL = [7,7,1,1]
-i = 0
-def calcLocLocs (target,L0,L1):
-    lenP = (target[0]**2+target[2]**2)**0.5
-    lenH = (lenP**2+target[1]**2)**0.5
-    if target[2] > 0:
-        angN0a = math.degrees(math.asin(target[2]/lenP))
-    else:
-        angN0a = -math.degrees(math.asin(target[2]/lenP))
-    angN0 = 180 + angN0a
-    angN1 = 180 +  math.degrees(math.acos((L0**2+lenH**2-L1**2)/(2*L0*lenH))) + math.degrees(math.asin(target[1]/lenH))
-    angN2 = math.degrees(math.acos((L0**2+L1**2-lenH**2)/(2*L0*L1)))
-    angN3aa = 180 - math.degrees(math.acos((L0**2+lenH**2-L1**2)/(2*L0*lenH))) - angN2
-    angN3ab = math.degrees(math.asin(lenP/lenH))
-    angN3a = angN3aa + angN3ab
-    angN3 = angN3a+90
-    lenN2xa = math.cos(math.radians(angN1-180))*L0
-    pointN2 = [math.cos(math.radians(angN0-180))*lenN2xa,math.sin(math.radians(angN1-180))*L0,math.sin(math.radians(angN0-180))*lenN2xa]
-    
-    plotPoints = [[0,0,0],pointN2,target]
-    return([[angN0,angN1,angN2,angN3],plotPoints])
-
-def calcRotLocs(target,TRots,N3l,N4l):
-    pointN4 = [0,0,0]
-    deltaN4y = math.cos(math.radians(270-TRots[0]))*N4l
-    N4p = math.sin(math.radians(270-TRots[0]))*N4l
-    deltaN4x = math.sin(math.radians(270-TRots[1]))*N4p
-    deltaN4z = math.cos(math.radians(270-TRots[1]))*N4p
-    #z
-    if TRots[1] < 180:
-        pointN4[2] = target[2]+deltaN4z
-    else:
-        pointN4[2] = target[2]-deltaN4z
-    #y
-    if TRots[0] <180:
-        pointN4[1] = target[1]+deltaN4y
-    else:
-        pointN4[1] = target[1]-deltaN4y
-    #x
-    if TRots[1]<90 or TRots[1]>270:
-        pointN4[0] = target[0]+deltaN4x
-    else:
-        pointN4[0] = target[0]-deltaN4x
-    vectorP = [0,1,0]
-    vectorP[2] = ((pointN4[0]*pointN4[2]*vectorP[1]*(pointN4[1]-target[1]))/(pointN4[0]*pointN4[0]*(target[0]-pointN4[0])+pointN4[0]*pointN4[2]*(target[2]-pointN4[2])))
-    vectorP[0] = ((pointN4[0]*vectorP[1]*(pointN4[1]-target[1]))/(pointN4[0]*(target[0]-pointN4[0])+pointN4[2]*(target[2]-pointN4[2])))
-    pointP = [pointN4[0]-vectorP[0],pointN4[1]-vectorP[1],pointN4[2]-vectorP[2]]
-    vecNT = [target[0]-pointN4[0],target[1]-pointN4[1],target[2]-pointN4[2]]
-    vecNP = [pointP[0]-pointN4[0],pointP[1]-pointN4[1],pointP[2]-pointN4[2]]
-    print("dot product: (3dp)\n" + str(round(vecNT[0]*vecNP[0] + vecNT[1]*vecNP[1]+vecNT[2]*vecNP[2],3)))
-    vectorN3 = [0,1,0]
-    vectorN3[0] = ((-pointP[0]*vectorN3[1]*(pointP[1]-pointN4[1]))/(pointP[0]*(pointP[0]-pointN4[0])+pointP[2]*(pointP[2]-pointN4[2])))
-    vectorN3[2] = ((-pointP[2]*vectorN3[1]*(pointP[1]-pointN4[1]))/(pointP[0]*(pointP[0]-pointN4[0])+pointP[2]*(pointP[2]-pointN4[2])))
-    vecNP = [pointP[0]-pointN4[0],pointP[1]-pointN4[1],pointP[2]-pointN4[2]]
-    constantN3 = ((N3l**2)/(vectorN3[0]**2+vectorN3[1]**2+vectorN3[2]**2))**0.5
-    scaledVectorN3 = [vectorN3[0]*constantN3,vectorN3[1]*constantN3,vectorN3[2]*constantN3]
-    pointN3 = [pointN4[0]-scaledVectorN3[0],pointN4[1]-scaledVectorN3[1],pointN4[2]-scaledVectorN3[2]]
-    print("dot product: (3dp)\n" + str(round(scaledVectorN3[0]*vecNP[0] + scaledVectorN3[1]*vecNP[1]+scaledVectorN3[2]*vecNP[2],3)))
-    return([pointN3,pointN4,pointP])
-def getAngles(TL,TR,AL):
-    rotDat = calcRotLocs(TL,TR,AL[2],AL[3])
-    locDat = calcLocLocs(rotDat[0],AL[0],AL[1])
-    if rotDat[1][1] > rotDat[0][1]:
-        ang3b = math.degrees(math.asin((rotDat[1][1]-rotDat[0][1])/TL[2]))
-    else:
-        ang3b = -math.degrees(math.asin((rotDat[1][1]-rotDat[0][1])/TL[2]))
-    ang3 = locDat[0][3]+ ang3b
-    magSquaredLT = (rotDat[0][0]-TL[0])**2+(rotDat[0][1]-TL[1])**2+(rotDat[0][2]-TL[2])**2
-    ang4 = math.degrees(math.acos((AL[2]**2+AL[3]**2-magSquaredLT)/(2*AL[2]*AL[3])))
-    print("Angles(3dp):\n" + str(round(locDat[0][0],3)),str(round(locDat[0][1],3)),str(round(locDat[0][2],3)),str(round(ang3,3)),str(round(ang4,3)))
-    return(locDat[0][0],locDat[0][1],locDat[0][2],ang3,ang4)
-def getPoints(TL,TR,AL):
-    rotDat = calcRotLocs(TL,TR,AL[2],AL[3])
-    locDat = calcLocLocs(rotDat[0],AL[0],AL[1])
-    if rotDat[1][1] > rotDat[0][1]:
-        ang3b = math.degrees(math.asin((rotDat[1][1]-rotDat[0][1])/TL[2]))
-    else:
-        ang3b = -math.degrees(math.asin((rotDat[1][1]-rotDat[0][1])/TL[2]))
-    ang3 = locDat[0][3]+ ang3b
-    magSquaredLT = (rotDat[0][0]-TL[0])**2+(rotDat[0][1]-TL[1])**2+(rotDat[0][2]-TL[2])**2
-    ang4 = math.degrees(math.acos((AL[2]**2+AL[3]**2-magSquaredLT)/(2*AL[2]*AL[3])))
-    print("Angles(3dp):\n" + str(round(locDat[0][0],3)),str(round(locDat[0][1],3)),str(round(locDat[0][2],3)),str(round(ang3,3)),str(round(ang4,3)))
-    # ax.plot3D([rotDat[2][0],rotDat[1][0],TL[0]],[rotDat[2][2],rotDat[1][2],TL[2]], [rotDat[2][1],rotDat[1][1],TL[1]], 'blue')
-    # ax.plot3D([rotDat[0][0],rotDat[1][0],TL[0]], [rotDat[0][2],rotDat[1][2],TL[2]], [rotDat[0][1],rotDat[1][1],TL[1]], 'red')
-    # ax.plot3D([locDat[1][0][0],locDat[1][1][0],locDat[1][2][0]],[locDat[1][0][2],locDat[1][1][2],locDat[1][2][2]],[locDat[1][0][1],locDat[1][1][1],locDat[1][2][1]], 'purple')
-    # plt.draw()
-    # plt.show()
-    return([[locDat[1][0],locDat[1][1],locDat[1][2],rotDat[1],TL],[locDat[0][0],locDat[0][1],locDat[0][2],ang3,ang4]])
-def getPlots(TL,TR,AL):
-    data = getPoints(TL,TR,AL)
-    return([[data[0][0][0],data[0][1][0],data[0][2][0],data[0][3][0],data[0][4][0]],[data[0][0][1],data[0][1][1],data[0][2][1],data[0][3][1],data[0][4][1]],[data[0][0][2],data[0][1][2],data[0][2][2],data[0][3][2],data[0][4][2]]])
-def plotPoints(a):
-    if a != 0:
-        ax.clear()
-    print("a:")
-    print(a)
-    x = math.sin(math.radians(a))
-    print("x:")
-    print(x)
-    print('val:')
-    print(180*(x)+45)
-    TR = [179,270*(x)+90]
-    TL = [4,3,4]
-    AL = [5,5,1,1]
-    point = getPlots(TL,TR,AL)
-    plt.plot(point[0][0:2],point[2][0:2],point[1][0:2],'purple')
-    plt.plot(point[0][1:3],point[2][1:3],point[1][1:3],'green')
-    plt.plot(point[0][2:4],point[2][2:4],point[1][2:4],'blue')
-    plt.plot(point[0][3:5],point[2][3:5],point[1][3:5],'orange')
-    # plt.plot(point[0],point[2],point[1],'blue')
-    ax.plot3D([0,-10,-10,-10,15,15],[0,0,-10,15,15,15],[0,0,0,0,0,15],'gray')
-    plt.draw()
-    # plt.show()
-
-ani = FuncAnimation(fig, plotPoints,interval=10)
+# Varing:
+# L = [5.5,6.25,22.25,22.25,6.25]
+L = [10.5,10.25,22.25,22.25,6.25]
+TP = [10,10,20]
+TRA = [20,70]
+# Vectors:
+O = [0,0,L[4]]
+TRV = [cos(TRA[0])*cos(TRA[1]),sin(TRA[0])*cos(TRA[1]),sin(TRA[1])]
+P1 = [TRV[0]*L[0]/mg(TRV)+TP[0],TRV[1]*L[0]/mg(TRV)+TP[1],TRV[2]*L[0]/mg(TRV)+TP[2]]
+OP1 = [P1[0]-O[0],
+    P1[1]-O[1],
+    P1[2]-O[2]]
+N = [-TRV[2]*OP1[0]/(OP1[0]*TRV[0]+OP1[1]*TRV[1]),
+    -TRV[2]/(OP1[0]*TRV[0]/OP1[1]+TRV[1]),
+    1]
+Q = [-N[2]*OP1[0]/(OP1[0]*N[0]+OP1[1]*N[1]),
+    -N[2]/(OP1[0]*N[0]/OP1[1]+N[1]),
+    1]
+P2 = [Q[0]*L[1]/mg(Q)+P1[0],
+    Q[1]*L[1]/mg(Q)+P1[1],
+    Q[2]*L[1]/mg(Q)+P1[2]]
+P3Ops = [0,0]
+P3Z = qd((2*P2[2]-2*L[4])**2+4*(P2[0]**2+P2[1]**2),
+    4*(L[4]-P2[2])*(-L[2]**2+L[3]**2-L[4]**2+mg(P2)**2)-8*L[4]*(P2[0]**2+P2[1]**2),
+    (-L[2]**2+L[3]**2-L[4]**2+mg(P2)**2)**2-4*(P2[0]**2+P2[1]**2)*(L[3]**2-L[4]**2))[P3Ops[0]]
+P3Y = [((L[3]**2-(P3Z-L[4])**2)/((P2[0]**2/P2[1]**2)+1))**0.5,-((L[3]**2-(P3Z-L[4])**2)/((P2[0]**2/P2[1]**2)+1))**0.5][P3Ops[1]]
+P3 = [P3Y*P2[0]/P2[1],
+    P3Y,
+    P3Z]
+P4 = [0,0,L[4]]
+print([mg(vecSub(P2,P3)),mg(vecSub(P3,P4))], ([L[2],L[3]]))
+print(P3)
+# Angles:
+angles = []
+# Plotting:
+plt.plot([TP[0]+2,TP[0],TP[0],TP[0],TP[0]],[TP[1],TP[1],TP[1]+2,TP[1],TP[1]],[TP[2],TP[2],TP[2],TP[2],TP[2]+2],'purple')
+plt.plot([TP[0],P1[0],P2[0]],[TP[1],P1[1],P2[1]],[TP[2],P1[2],P2[2]],'green')
+plt.plot([P1[0],10*N[0]/mg(N)+P1[0]],[P1[1],10*N[1]/mg(N)+P1[1]],[P1[2],10*N[2]/mg(N)+P1[2]],'blue')
+plt.plot([P2[0],P3[0],O[0]],[P2[1],P3[1],O[1]],[P2[2],P3[2],O[2]],'orange')
+plt.plot([O[0],0],[O[1],0],[O[2],0],'pink')
+plt.plot([TP[0], TRV[0]+TP[0]],[TP[1], TRV[1]+TP[1]],[TP[2], TRV[2]+TP[2]],'blue')
+ax.plot3D([0,-70,-70,-70,70,70],[0,0,-70,70,70,70],[0,0,0,0,0,140],'gray')
+plt.draw()
 plt.show()

@@ -1,14 +1,14 @@
 from pyfirmata import Arduino, SERVO
 import time
 import math
-port = '/dev/cu.usbmodem1101'
+# port = '/dev/cu.usbmodem1101'
 # pin = 10
-board = Arduino(port)
-board.digital[13].mode = SERVO
-def rotateServo(pin, angle):
-    print(angle)
-    board.digital[pin].write(((256*(angle-45))/360))
-    time.sleep(0.015)
+# board = Arduino(port)
+# board.digital[13].mode = SERVO
+# def rotateServo(pin, angle):
+#     print(angle)
+#     board.digital[pin].write(((256*(angle-45))/360))
+#     time.sleep(0.015)
 def calcTorque(l1,l2,l3,l4,headMass,payloadMass):
     headMass = 0.0
     precision = 10
@@ -34,25 +34,26 @@ def calcTorque(l1,l2,l3,l4,headMass,payloadMass):
     total += (headMass+payloadMass)*(l4+l3+l2+l1)
     print(str(l4), str(total))
     return([total,l1+l2+l3+l4])
+
 def calcLocLocs (target,L0,L1):
     lenP = (target[0]**2+target[2]**2)**0.5
     lenH = (lenP**2+target[1]**2)**0.5
-    if target[2] > 0:
+    if target[2] > 0: 
         angN0a = math.degrees(math.asin(target[2]/lenP))
     else:
         angN0a = -math.degrees(math.asin(target[2]/lenP))
     angN0 = 180 + angN0a
-    angN1 = 180 +  math.degrees(math.acos((L0**2+lenH**2-L1**2)/(2*L0*lenH))) + math.degrees(math.asin(target[1]/lenH))
+    angN1 = math.degrees(math.acos((L0**2+lenH**2-L1**2)/(2*L0*lenH))) + math.degrees(math.asin(target[1]/lenH))
     angN2 = math.degrees(math.acos((L0**2+L1**2-lenH**2)/(2*L0*L1)))
     angN3aa = 180 - math.degrees(math.acos((L0**2+lenH**2-L1**2)/(2*L0*lenH))) - angN2
     angN3ab = math.degrees(math.asin(lenP/lenH))
     angN3a = angN3aa + angN3ab
     angN3 = angN3a+90
-    lenN2xa = math.cos(math.radians(angN1-180))*L0
-    pointN2 = [math.cos(math.radians(angN0-180))*lenN2xa,math.sin(math.radians(angN1-180))*L0,math.sin(math.radians(angN0-180))*lenN2xa]
+    lenN2xa = math.cos(math.radians(angN1))*L0
+    pointN2 = [math.cos(math.radians(angN0-180))*lenN2xa,math.sin(math.radians(angN1))*L0,math.sin(math.radians(angN0-180))*lenN2xa]
     
     plotPoints = [[0,0,0],pointN2,target]
-    return([[angN0,angN1,angN2,angN3],plotPoints])
+    return([[angN0,angN1+180,angN2,angN3],plotPoints])
 
 def calcRotLocs(target,TRots,N3l,N4l):
     pointN4 = [0,0,0]
@@ -128,8 +129,8 @@ def moveRobot(targetLocations, targetRotations, armLengths, headMass, payloadMas
     jointLocations = getPoints(targetLocations, targetRotations, armLengths)
     print(servoAngles)
     print(jointLocations)
-TL = [22,22,]
-TR = [180,180]
+TL = [22,22,5]
+TR = [0,0]
 AL = [22.5,22.5,6.41,1]
 headMass = 0
 payloadMass = 0.2
