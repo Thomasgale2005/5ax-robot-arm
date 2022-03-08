@@ -49,14 +49,14 @@ void moveBot(float L[5], float TP[3], float TRA[2]) {
     float P3X = P3Y * P2[0] / P2[1];
     float tempP3P2[3] = {P3X - P2[0], P3Y - P2[1], P3Z - P2[2]};
     if ((round(mg(tempP3P2) * 10000) == L[2] * 10000) and (round(mg(tempP3P2) * 10000) == L[3] * 10000)) {
-      if (P3X >= 0) {
-        if (P2[2] <= (P2[0]*P3Z / P3X + P4[2])) {
+      if (P3X > 0) {
+        if (P2[2] <w (P2[0]*P3Z / P3X + P4[2])) {
           P3[0] = P3X;
-          P3[1] = P3Y;
+          P3[1] = P3Y;  
           P3[2] = P3Z;
         }
       } else {
-        if (P2[2] >= (P2[0]*P3Z / P3X + P4[2])) {
+        if (P2[2] > (P2[0]*P3Z / P3X + P4[2])) {
           P3[0] = P3X;
           P3[1] = P3Y;
           P3[2] = P3Z;
@@ -123,11 +123,13 @@ void moveBot(float L[5], float TP[3], float TRA[2]) {
 void moveBotLinePath(float a[3],float b[3],float angs[2],float L[5],int split) {
   float ab[3] = {b[0]-a[0],b[1]-a[1],b[2]-a[2]};
   float TP[3] = {0,0,0};
+  float distance = mg(ab);
   for (int i = 0; i < split; i++) {
     TP[0] = a[0]+ab[0]*i/split;
     TP[1] = a[1]+ab[1]*i/split;
     TP[2] = a[2]+ab[2]*i/split;
     moveBot(L,TP,angs);
+//    delay(distance/split);
   }
 }
 float servoSmoothed9;
@@ -148,8 +150,8 @@ float servo13;
 
 //Varing:
 float L[5] = {6, 7.5, 22.25, 22.25, 3.75};
-float TP[3] = {15.000001, 5.000001, 25.0000001};
-float TRA[2] = {0.5, 135.5};
+float TP[3] = {20, 20, 30};
+float TRA[2] = {359.9, 179.9};
 
 float VRx1 = A0;
 float VRy1 = A1;
@@ -164,12 +166,12 @@ float xPosition2 = 0;
 float yPosition2 = 0;
 float xPosition3 = 0;
 float yPosition3 = 0;
-float mapX1 = 0;
-float mapY1 = 0;
-float mapX2 = 0;
-float mapY2 = 0;
-float mapX3 = 0;
-float mapY3 = 0;
+int mapX1 = 0;
+int mapY1 = 0;
+int mapX2 = 0;
+int mapY2 = 0;
+int mapX3 = 0;
+int mapY3 = 0;
 float a[3] = {0,0,0};
 float b[3] = {0,0,0};
 // twelve servo objects can be created on most boards
@@ -203,122 +205,23 @@ void loop() {
   mapY2 = map(yPosition2, 0, 1023, -511.5, 511.5);
   mapX3 = map(xPosition3, 0, 1023, -511.5, 511.5);
   mapY3 = map(yPosition3, 0, 1023, -511.5, 511.5);
-  float TP[3] = {25, 0, 17.5};
-  float TRA[2] = {359.9, 179.9};
+//  float TP[3] = {20, 20, 30};
+//  float TRA[2] = {359.9, 179.9};
   moveBot(L, TP, TRA);
-//  TP[0] += mapX1/10000;
-//  TP[1] += mapY1/10000;
-//  TP[2] += mapX2/10000;
-//  TRA[0] += mapY3/10000;
-//  TRA[1] += mapX3/10000;
-//  if (TRA[0] > 360) {
-//    TRA[0] = 1.5;
-//  } else if (TRA[0]<0) {
-//    TRA[0] = 358.5;
-//  }
-//  if (TRA[1] > 360) {
-//    TRA[1] = 1.5;
-//  } else if (TRA[1]<0) {
-//    TRA[1] = 358.5;
-//  }
-  delay(1500);
-  a[0] = 25;
-  a[1] = 0;
-  a[2] = 17.5;
-  b[0] = 25;
-  b[1] = 0;
-  b[2] = 25;
-  moveBotLinePath(a,b,TRA,L,5);
-  delay(1500);
-  a[0] = 25;
-  a[1] = 0;
-  a[2] = 25;
-  b[0] = 25;
-  b[1] = 7.5;
-  b[2] = 25;
-  moveBotLinePath(a,b,TRA,L,5);
-  delay(1500);
-  a[0] = 25;
-  a[1] = 0;
-  a[2] = 25;
-  b[0] = 25;
-  b[1] = 7.5;
-  b[2] = -5;
-  moveBotLinePath(a,b,TRA,L,15);
-  delay(2000);
-  a[0] = 25;
-  a[1] = 7.5;
-  a[2] = -5;
-  b[0] = 25;
-  b[1] = 15;
-  b[2] = -5;
-  moveBotLinePath(a,b,TRA,L,5);
-  delay(1500);
-  a[0] = 25;
-  a[1] = 15;
-  a[2] = -5;
-  b[0] = 25;
-  b[1] = 15;
-  b[2] = -15;
-  moveBotLinePath(a,b,TRA,L,5);
-  delay(1500);
-  a[0] = 25;
-  a[1] = 15;
-  a[2] = -15;
-  b[0] = 25;
-  b[1] = -15;
-  b[2] = -15;
-  moveBotLinePath(a,b,TRA,L,15);
-  delay(2000);
-  a[0] = 25;
-  a[1] = -15;
-  a[2] = -15;
-  b[0] = 25;
-  b[1] = -15;
-  b[2] = -5;
-  moveBotLinePath(a,b,TRA,L,5);
-  delay(1500);
-  a[0] = 25;
-  a[1] = -15;
-  a[2] = -5;
-  b[0] = 25;
-  b[1] = -7.5;
-  b[2] = -5;
-  moveBotLinePath(a,b,TRA,L,5);
-  delay(1500);
-  a[0] = 25;
-  a[1] = -7.5;
-  a[2] = -5;
-  b[0] = 25;
-  b[1] = -7.5;
-  b[2] = 25;
-  moveBotLinePath(a,b,TRA,L,15);
-  delay(2000);
-  a[0] = 25;
-  a[1] = -7.5;
-  a[2] = 25;
-  b[0] = 25;
-  b[1] = 0;
-  b[2] = 25;
-  moveBotLinePath(a,b,TRA,L,5);
-  delay(1500);
-  a[0] = 25;
-  a[1] = 0;
-  a[2] = 25;
-  b[0] = 25;
-  b[1] = 0;
-  b[2] = 17.5;
-  moveBotLinePath(a,b,TRA,L,5);
-  delay(1500);
-//  moveBot(L, {15, 5, 25}, {340.5, 135.5});
-  //  myservo13.write(90);
-  //  for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees  
-  //    // in steps of 1 degree
-  //    myservo.write(pos);              // tell servo to go to position in variable 'pos'
-  //    delay(15);                       // waits 15 ms for the servo to reach the position
-  //  }
-  //  for (pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-  //    myservo.write(pos);              // tell servo to go to position in variable 'pos'
-  //    delay(15);                       // waits 15 ms for the servo to reach the position
-  //  }
+  TP[0] += mapX1/500;
+  TP[1] += mapY1/500;
+  TP[2] += mapX2/500;
+  TRA[0] += mapY3/500;
+  TRA[1] += mapX3/500;
+  if (TRA[0] >= 360) {
+    TRA[0] = 1.5;
+  } else if (TRA[0]<=0) {
+    TRA[0] = 358.5;
+  }
+  if (TRA[1] >= 360) {
+    TRA[1] = 1.5;
+  } else if (TRA[1]<=0) {
+    TRA[1] = 358.5;
+  }
+  delay(10);
 }

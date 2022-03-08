@@ -74,7 +74,7 @@ Lprec= 4
 i = 0
 while i < 4:
     if round(mg(vecSub(P2,P3s[i])),Lprec) == L[2] and round(mg(vecSub(P4,P3s[i])),Lprec) == L[3]:
-        if P3s[i][0] > 0: #P3 Forward
+        if P3s[i][0] >= 0: #P3 Forward
             if P2[2] < (P2[0]*P3s[i][2]/P3s[i][0]+P4[2]):
                 P3 = P3s[i]
         else: #P3 Back

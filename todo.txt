@@ -1,6 +1,0 @@
-create final moveArm function
-add angles bounds to moveArm functions
-
-Robot mk2:
-Put design intoCAD
-Order stepper motors and aluminium extrusion from ali-express.
